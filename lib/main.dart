@@ -35,31 +35,59 @@ class _MyHomePageState extends State<MyHomePage> {
   double _blue = 0.0;
   var _size = 100.0;
 
+  bool _allowResize = true;
+  bool _changeprimer = true;
+
   get red => _red;
-  set red(value) => _red = value;
+  set red(value) => setState(() => _red = value);
 
   get blue => _blue;
-  set blue(value) => _blue = value;
+  set blue(value) => setState(() => _blue = value);
 
   get green => _green;
-  set green(value) => _green = value;
+  set green(value) => setState(() => _green = value);
 
   get size => _size;
-  set size(value) => _size = value;
+  set size(value) => setState(() => _size = value);
+
+  get changeprimer => _changeprimer;
+
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        key: _drawerKey,
         appBar: AppBar(
           title: Text('My Icon'),
+          actions: [
+            _allowResize ? Contain(state: this) : SizedBox(),
+          ],
           leading: IconButton(
             icon: Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () => _drawerKey.currentState.openDrawer(),
           ),
-          actions: [
-            Contain(state: this),
-          ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              CheckboxListTile(
+                value: _allowResize,
+                onChanged: (bool value) {
+                  setState(() => _allowResize = value);
+                },
+                title: Text('Allow Resize?'),
+              ),
+              CheckboxListTile(
+                value: _changeprimer,
+                onChanged: (bool value) {
+                  setState(() => _changeprimer = value);
+                },
+                title: Text('Allow change Primer Color?'),
+              )
+            ],
+          ),
         ),
         body: Body(
           size: size,
